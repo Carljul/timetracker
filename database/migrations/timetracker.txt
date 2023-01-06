@@ -1,0 +1,43 @@
+timetracker
+
+person
+firstname
+middlename
+lastname
+suffix
+birthdate
+
+employee
+employee_gen_id
+person_id
+date_employeed
+date_resigned
+isResigned
+
+
+user
+employee_id
+username
+password
+role
+
+
+timetracker
+employee_id
+date
+time_in
+lunch_break_start
+lunch_brek_ends
+time_out
+overtime_hour
+late_hour
+
+
+startTimeSettings
+workstarts = string (in time format)
+workends = string (in time format)
+lunchbreak = int (hours to spend)
+
+
+
+
