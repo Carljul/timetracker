@@ -16,11 +16,12 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('employee_gen_id', 6)->unique();
-            $table->unsignedBigInteger('person_id');
+            $table->unsignedBigInteger('person_id')->unique();
             $table->date('date_employed')->nullable();
             $table->date('date_resigned')->nullable();
             $table->boolean('isResigned')->default(0);
             $table->timestamps();
+            $table->softDeletes();
 
             // Foreign Key
             $table->foreign('person_id')->references('id')->on('persons')->onDelete('cascade');

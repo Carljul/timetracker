@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('suffix')->nullable();
             $table->date('birthdate')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

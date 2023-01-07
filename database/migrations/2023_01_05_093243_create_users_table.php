@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('employee_id');
+            $table->string('employee_id')->unique();
             $table->string('username')->unique();
             $table->string('password');
             $table->tinyInteger('role')->comment('1: Admin 2: Employee');
             $table->timestamps();
+            $table->softDeletes();
 
             // Foreign
             $table->foreign('employee_id')->references('employee_gen_id')->on('employees')->onDelete('cascade');

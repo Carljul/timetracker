@@ -14,7 +14,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        //
+        $employees = Employees::list();
+        return view('pages.employees.index', compact('employees'));
     }
 
     /**
@@ -24,7 +25,7 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.employees.create');
     }
 
     /**
@@ -35,7 +36,18 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'firstname' => 'required',
+            'lastname' => 'required'
+        ]);
+
+        $rtn = Employees::store($request->all());
+
+        if ($rtn) {
+            return redirect()->route('employee.index')->with(['msg' => 'Saved']);
+        }
+
+        return redirect()->back()->with(['msg' => 'Something went wrong']);
     }
 
     /**
@@ -52,34 +64,51 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Employees  $employees
+     * @param  \App\Models\Employees  $employee
      * @return \Illuminate\Http\Response
      */
-    public function edit(Employees $employees)
+    public function edit(Employees $employee)
     {
-        //
+        return view('pages.employees.edit', compact('employee'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Employees  $employees
+     * @param  \App\Models\Employees  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employees $employees)
+    public function update(Request $request, Employees $employee)
     {
-        //
+        $request->validate([
+            'firstname' => 'required',
+            'lastname' => 'required'
+        ]);
+
+        $rtn = Employees::updater($request->all(), $employee);
+
+        if ($rtn) {
+            return redirect()->route('employee.index')->with(['msg' => 'Updated']);
+        }
+
+        return redirect()->back()->with(['msg' => 'Something went wrong']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Employees  $employees
+     * @param  \App\Models\Employees  $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Employees $employees)
+    public function destroy(Employees $employee)
     {
-        //
+        $rtn = Employees::destroy($employee);
+        
+        if ($rtn) {
+            return redirect()->route('employee.index')->with(['msg' => 'Deleted']);
+        }
+
+        return redirect()->back()->with(['msg' => 'Something went wrong']);
     }
 }
