@@ -5,16 +5,23 @@
         $(document).ready(function () {
             $('#btnTimeIn').on('click', function () {
                 let action = $('#timeActivity').attr('action');
-                console.log($('#idNumber').val())
                 if ($('#idNumber').val()) {
                     $.ajax({
                         type: 'POST',
                         url: action,
                         data: {'employee_id': $('#idNumber').val()},
                         success: function (response) {
-                            console.log(response);
-                            $('#activity').html('Time In');
-                            $('#exampleModal').modal('show');
+                            if (!response.withRecord && response.exists) {
+                                $('#activityForm').attr('action', "{{route('timelog.store')}}");
+                                $('#idNumberInput').val(response.employee_id);
+                                $('#activity').html('Time In');
+                                $('#exampleModal').modal('show');
+                                $('input[name="_method"]').remove();
+                            } else if (!response.exists) {
+                                alert('Employee ID number not found');
+                            } else {
+                                alert('You already have time in for this day');
+                            }
                         }
                     });
                 }
@@ -28,9 +35,15 @@
                         url: action,
                         data: {'employee_id': $('#idNumber').val()},
                         success: function (response) {
-                            console.log(response);
-                            $('#activity').html('Time Out');
-                            $('#exampleModal').modal('show');
+                            if (response.withRecord && response.exists) {
+                                $('#activityForm').attr('action', '/timelog/'+response.employee_id);
+                                $('#idNumberInput').val(response.employee_id);
+                                $('#activityForm').append('<input type="hidden" name="_method" value="PUT">');
+                                $('#activity').html('Time Out');
+                                $('#exampleModal').modal('show');
+                            } else if (!response.exists) {
+                                alert('Employee ID number not found');
+                            }
                         }
                     });
                 }

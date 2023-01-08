@@ -20,14 +20,24 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/', function () {
     return view('timetracker');
-})->name('timelog');
+})->name('timelogs');
 
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('employee', EmployeeController::class);
+    Route::resource('report', ReportsController::class);
+    Route::resource('timesetting', TimeSettingsController::class);
+});
 
-Route::resource('employee', EmployeeController::class);
-Route::resource('timelog', TimeLogsController::class)->except(['show']);
-Route::post('/timelog', [TimeLogsController::class, 'show'])->name('timelog.show');
-Route::resource('report', ReportsController::class);
-Route::resource('timesetting', TimeSettingsController::class);
+Route::group(['prefix' => 'timelog', 'as' => 'timelog.'], function () {
+    Route::group(['middleware' => 'auth'], function () {
+        Route::get('/', [TimeLogsController::class, 'index'])->name('index');
+        Route::get('/create', [TimeLogsController::class, 'create'])->name('create');
+    });
+    Route::post('/', [TimeLogsController::class, 'store'])->name('store');
+    Route::post('/show', [TimeLogsController::class, 'show'])->name('show');
+    Route::match(['PUT', 'PATCH'], '/{timelog}', [TimeLogsController::class, 'update'])->name('update');
+    Route::delete('/{timelog}', [TimeLogsController::class, 'destroy'])->name('destroy');
+    Route::get('/{timelog}/edit', [TimeLogsController::class, 'edit'])->name('edit');
+});

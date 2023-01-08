@@ -45,7 +45,7 @@
                                 <button type="submit" class="btn btn-primary form-control">
                                     {{ __('Login') }}
                                 </button>
-                                <a href="{{route('timelog')}}" class="btn btn-warning mt-3 form-control">{{ __('Time Log') }}</a>
+                                <a href="{{route('timelogs')}}" class="btn btn-warning mt-3 form-control">{{ __('Time Log') }}</a>
                             </div>
                         </div>
                     </form>

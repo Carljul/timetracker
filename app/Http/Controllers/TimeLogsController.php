@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TimeLogs;
+use App\Models\Employees;
 use Illuminate\Http\Request;
 
 class TimeLogsController extends Controller
@@ -39,7 +40,7 @@ class TimeLogsController extends Controller
             'employee_id' => 'required'
         ]);
 
-        $rtn = TimeLogsController::store($request->all());
+        $rtn = TimeLogs::store($request->all());
 
         if ($rtn) {
             return redirect()->back()->with(['msg' => 'Time In']);
@@ -64,13 +65,25 @@ class TimeLogsController extends Controller
 
         $rtn = TimeLogs::where('employee_id', $params['employee_id'])
             ->whereDate('activity_date', now())
-            ->exists();
+            ->first();
+        
+        $employeeExists = Employees::where('employee_gen_id', $params['employee_id'])->exists();
 
-        if ($rtn) {
-            return redirect()->back()->with(['withRecord' => true]);
+        if (!empty($rtn)) {
+            return response()->json([
+                'withRecord' => true,
+                'employee' => $rtn,
+                'employee_id' => $params['employee_id'],
+                'exists' => $employeeExists
+            ]);
         }
 
-        return redirect()->back()->with(['withRecord' => false]);
+        return response()->json([
+            'withRecord' => false,
+            'employee' => $rtn,
+            'employee_id' => $params['employee_id'],
+            'exists' => $employeeExists
+        ]);
     }
 
     /**
@@ -91,13 +104,13 @@ class TimeLogsController extends Controller
      * @param  \App\Models\TimeLogs  $timeLog
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TimeLogs $timeLog)
+    public function update(Request $request, $timeLog)
     {
         $request->validate([
             'employee_id' => 'required'
         ]);
 
-        $rtn = TimeLogsController::updater($request->all(), $timeLog);
+        $rtn = TimeLogs::updater($request->all(), $timeLog);
 
         if ($rtn) {
             return redirect()->back()->with(['msg' => 'Time Out`']);

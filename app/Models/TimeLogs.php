@@ -4,12 +4,11 @@ namespace App\Models;
 
 use DB;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TimeLogs extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $table = 'timelogs';
 
@@ -26,8 +25,7 @@ class TimeLogs extends Model
 
     protected $dates = [
         'created_at',
-        'updated_at',
-        'deleted_at'
+        'updated_at'
     ];
 
     public function employee()
@@ -41,8 +39,8 @@ class TimeLogs extends Model
         try {
             self::create([
                 'employee_id' => $params['employee_id'],
-                'activity_date' => $params['activity_date'],
-                'time_in' => $params['time_in'],
+                'activity_date' => now(),
+                'time_in' => date("H::i"),
             ]);
             DB::commit();
             return true;
@@ -57,8 +55,9 @@ class TimeLogs extends Model
     {
         DB::beginTransaction();
         try {
+            $timelog = self::where('employee_id', $timelog)->first();
             $timelog->update([
-                'time_out' => $params['time_out'],
+                'time_out' => date("H::i"),
             ]);
             DB::commit();
             return true;
