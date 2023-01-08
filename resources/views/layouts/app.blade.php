@@ -88,5 +88,15 @@
             @yield('content')
         </main>
     </div>
+
+    <script src="{{asset('js/jquery-3.6.3.min.js')}}"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
+    @stack('js')
 </body>
 </html>

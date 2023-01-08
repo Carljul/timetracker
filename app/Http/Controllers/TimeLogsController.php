@@ -35,7 +35,17 @@ class TimeLogsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'employee_id' => 'required'
+        ]);
+
+        $rtn = TimeLogsController::store($request->all());
+
+        if ($rtn) {
+            return redirect()->back()->with(['msg' => 'Time In']);
+        }
+
+        return redirect()->back()->with(['msg' => 'Something went wrong']);
     }
 
     /**
@@ -44,9 +54,23 @@ class TimeLogsController extends Controller
      * @param  \App\Models\TimeLogs  $timeLogs
      * @return \Illuminate\Http\Response
      */
-    public function show(TimeLogs $timeLogs)
+    public function show(Request $request)
     {
-        //
+        $request->validate([
+            'employee_id' => 'required'
+        ]);
+
+        $params = $request->all();
+
+        $rtn = TimeLogs::where('employee_id', $params['employee_id'])
+            ->whereDate('activity_date', now())
+            ->exists();
+
+        if ($rtn) {
+            return redirect()->back()->with(['withRecord' => true]);
+        }
+
+        return redirect()->back()->with(['withRecord' => false]);
     }
 
     /**
@@ -64,12 +88,22 @@ class TimeLogsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\TimeLogs  $timeLogs
+     * @param  \App\Models\TimeLogs  $timeLog
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TimeLogs $timeLogs)
+    public function update(Request $request, TimeLogs $timeLog)
     {
-        //
+        $request->validate([
+            'employee_id' => 'required'
+        ]);
+
+        $rtn = TimeLogsController::updater($request->all(), $timeLog);
+
+        if ($rtn) {
+            return redirect()->back()->with(['msg' => 'Time Out`']);
+        }
+
+        return redirect()->back()->with(['msg' => 'Something went wrong']);
     }
 
     /**

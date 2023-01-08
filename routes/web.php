@@ -5,6 +5,7 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TimeLogsController;
 use App\Http\Controllers\TimeSettingsController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +24,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::resource('employee', EmployeeController::class);
-Route::resource('timelog', TimeLogsController::class);
+Route::resource('timelog', TimeLogsController::class)->except(['show']);
+Route::post('/timelog', [TimeLogsController::class, 'show'])->name('timelog.show');
 Route::resource('report', ReportsController::class);
 Route::resource('timesetting', TimeSettingsController::class);
