@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TimeLogsController;
 use App\Http\Controllers\TimeSettingsController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Employee\EmployeeController as StaffController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,13 +19,15 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-Route::get('/', function () {
-    return view('timetracker');
-})->name('timelogs');
+Route::get('/', [HomeController::class, 'index'])->name('timelogs');
 
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
+});
+
+Route::group(['middleware' => ['auth', 'can:admin.view']], function () {
     Route::resource('employee', EmployeeController::class);
     Route::resource('report', ReportsController::class);
     Route::resource('timesetting', TimeSettingsController::class);

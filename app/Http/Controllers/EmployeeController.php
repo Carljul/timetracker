@@ -44,10 +44,10 @@ class EmployeeController extends Controller
         $rtn = Employees::store($request->all());
 
         if ($rtn) {
-            return redirect()->route('employee.index')->with(['msg' => 'Saved']);
+            return redirect()->route('employee.index')->with('success', ['Saved', 'success']);
         }
 
-        return redirect()->back()->with(['msg' => 'Something went wrong']);
+        return redirect()->back()->with('error', ['Something went wrong', 'danger']);
     }
 
     /**

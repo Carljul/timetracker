@@ -57,7 +57,12 @@ class LoginController extends Controller
         $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         if(auth()->attempt(array($fieldType => $input['username'], 'password' => $input['password'])))
         {
-            return redirect()->route('employee.index');
+            if (\Auth::user()->role == config('const.roles.key.Admin')) {
+                return redirect()->route('employee.index');
+            } else {
+                return redirect()->route('staff.index');
+            }
+            abort(404);
         }else{
             return redirect()->route('login')
                 ->with('error','Credentials do not match');

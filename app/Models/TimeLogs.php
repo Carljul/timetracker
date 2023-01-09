@@ -35,12 +35,13 @@ class TimeLogs extends Model
 
     public static function store($params)
     {
+        date_default_timezone_set("Asia/Manila");
         DB::beginTransaction();
         try {
             self::create([
                 'employee_id' => $params['employee_id'],
                 'activity_date' => now(),
-                'time_in' => date("H::i"),
+                'time_in' => date("H:i"),
             ]);
             DB::commit();
             return true;
@@ -53,11 +54,12 @@ class TimeLogs extends Model
 
     public static function updater($params, $timelog)
     {
+        date_default_timezone_set("Asia/Manila");
         DB::beginTransaction();
         try {
             $timelog = self::where('employee_id', $timelog)->first();
             $timelog->update([
-                'time_out' => date("H::i"),
+                'time_out' => date("H:i"),
             ]);
             DB::commit();
             return true;
