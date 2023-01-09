@@ -126,6 +126,12 @@ class TimeLogs extends Model
 
     public static function filter($params)
     {
+        if (!empty($params)) {
+            return self::whereBetween('activity_date', [date($this->params['dateFrom']), date($this->params['dateTo'])])
+                ->with('employee')
+                ->get();
+        }
+
         return self::with('employee')->get();
     }
 

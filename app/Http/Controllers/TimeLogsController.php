@@ -70,7 +70,8 @@ class TimeLogsController extends Controller
                 'withRecord' => true,
                 'employee' => $rtn,
                 'employee_id' => $params['employee_id'],
-                'exists' => $employeeExists
+                'exists' => $employeeExists,
+                'withTimeOut' => !empty($rtn->time_out)
             ]);
         }
 
@@ -78,7 +79,8 @@ class TimeLogsController extends Controller
             'withRecord' => false,
             'employee' => $rtn,
             'employee_id' => $params['employee_id'],
-            'exists' => $employeeExists
+            'exists' => $employeeExists,
+            'withTimeOut' => false
         ]);
     }
 

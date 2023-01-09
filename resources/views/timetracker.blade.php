@@ -35,7 +35,9 @@
                         url: action,
                         data: {'employee_id': $('#idNumber').val()},
                         success: function (response) {
-                            if (response.withRecord && response.exists) {
+                            if (response.withTimeOut) {
+                                alert('You have time out already');
+                            }else if (response.withRecord && response.exists) {
                                 $('#activityForm').attr('action', '/timelog/'+response.employee_id);
                                 $('#idNumberInput').val(response.employee_id);
                                 $('#activityForm').append('<input type="hidden" name="_method" value="PUT">');
@@ -91,26 +93,26 @@
     </div>
 
   
-  <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <p>Are you sure you want to <span id="activity"></span></p>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <form action="" method="post" id="activityForm">
-                @csrf
-                <input type="hidden" name="employee_id" id="idNumberInput">
-                <button type="submit" class="btn btn-primary">Confirm</button>
-            </form>
-        </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to <span id="activity"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form action="" method="post" id="activityForm">
+                    @csrf
+                    <input type="hidden" name="employee_id" id="idNumberInput">
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                </form>
+            </div>
+            </div>
         </div>
     </div>
-</div>
 @endsection

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\TimeLogs;
+use App\Models\Employees;
 use Illuminate\Http\Request;
+use App\Exports\ExportReport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportsController extends Controller
 {
@@ -14,9 +17,16 @@ class ReportsController extends Controller
      */
     public function index(Request $request)
     {
+        if (!empty($request->all())) {
+            $request->validate([
+                'dateFrom' => 'required',
+                'dateTo' => 'required'
+            ]);
+        }
         $params = $request->all();
         $timelogs = TimeLogs::filter($params);
-        return view('pages.reports.index', compact('timelogs'));
+        $employees = Employees::where('isResigned', 0)->where('person_id', '!=', 1)->with('person')->get();
+        return view('pages.reports.index', compact('timelogs', 'employees'));
     }
 
     /**
@@ -30,14 +40,21 @@ class ReportsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store method is for download
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'dateFrom' => 'required',
+            'dateTo' => 'required',
+            'employee' => 'required'
+        ]);
+        $params = $request->all();
+
+        return Excel::download(new ExportReport($params), 'Reports_'.date('Y-m-d').'.xlsx');
     }
 
     /**

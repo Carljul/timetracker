@@ -29,8 +29,16 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['middleware' => ['auth', 'can:admin.view']], function () {
     Route::resource('employee', EmployeeController::class);
-    Route::resource('report', ReportsController::class);
-    Route::post('/report', [ReportsController::class, 'index']);
+    Route::group(['middleware' => 'auth', 'prefix' => 'report', 'as' => 'report.'], function () {
+        Route::get('/', [ReportsController::class, 'index'])->name('index');
+        Route::post('/', [ReportsController::class, 'index'])->name('filter');
+        Route::get('/create', [ReportsController::class, 'create'])->name('create');
+        Route::post('/', [ReportsController::class, 'store'])->name('store');
+        Route::post('/show', [ReportsController::class, 'show'])->name('show');
+        Route::match(['PUT', 'PATCH'], '/{report}', [ReportsController::class, 'update'])->name('update');
+        Route::delete('/{report}', [ReportsController::class, 'destroy'])->name('destroy');
+        Route::get('/{report}/edit', [ReportsController::class, 'edit'])->name('edit');
+    });
     Route::resource('timesetting', TimeSettingsController::class);
 });
 
