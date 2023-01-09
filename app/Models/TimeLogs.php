@@ -56,7 +56,7 @@ class TimeLogs extends Model
                         'late' => $late,
                     ]);
                     DB::commit();
-                    return 'Undertime';
+                    return 'Late';
                 } else {
                     self::create([
                         'employee_id' => $params['employee_id'],
@@ -86,6 +86,32 @@ class TimeLogs extends Model
         DB::beginTransaction();
         try {
             $timelog = self::where('employee_id', $timelog)->first();
+            $timesettings = TimeSettings::first();
+
+            if (!empty($timesettings)) {
+                $timeDB = $timesettings->workends;
+                $timeEntry = date("H:i");
+                $workends = (int)str_replace(':', '', $timeDB);
+                $out = (int)str_replace(':', '', $timeEntry);
+                $undertimeOrOvertime = self::convertTime(round(abs(strtotime($timeEntry) - strtotime($timeDB)) / 3600,2));
+                
+                if ($out > $workends) {
+                    $timelog->update([
+                        'time_out' => date("H:i"),
+                        'overtime' => $undertimeOrOvertime,
+                    ]);
+                } else if ($out < $workends) {
+                    $timelog->update([
+                        'time_out' => date("H:i"),
+                        'undertime' => $undertimeOrOvertime,
+                    ]);
+                }
+
+                DB::commit();
+                return true;
+            }
+
+
             $timelog->update([
                 'time_out' => date("H:i"),
             ]);
