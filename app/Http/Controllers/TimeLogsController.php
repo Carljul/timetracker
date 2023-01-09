@@ -42,11 +42,7 @@ class TimeLogsController extends Controller
 
         $rtn = TimeLogs::store($request->all());
 
-        if ($rtn) {
-            return redirect()->back()->with('success', ['Time In!', 'success']);
-        }
-
-        return redirect()->back()->with('error', ['Something went wrong', 'danger']);
+        return redirect()->back()->with(!empty($rtn) ? 'success' : 'error', [!empty($rtn) ? $rtn : 'Something went wrong', !empty($rtn) ? 'success' : 'danger']);
     }
 
     /**

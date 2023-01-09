@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('workstarts');
             $table->string('workends');
-            $table->string('lunchbreak');
+            $table->string('lunchbreak')->nullable();
             $table->timestamps();
         });
     }

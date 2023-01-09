@@ -52,13 +52,13 @@
                         @else
                             @can('admin.view')
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Employees') }}</a>
+                                    <a class="nav-link" href="{{ route('employee.index') }}">{{ __('Employees') }}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Reports') }}</a>
+                                    <a class="nav-link" href="{{ route('report.index') }}">{{ __('Reports') }}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Work Settings') }}</a>
+                                    <a class="nav-link" href="{{ route('timesetting.index') }}">{{ __('Work Settings') }}</a>
                                 </li>
                             @endcan
                             <li class="nav-item dropdown">

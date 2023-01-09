@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use DB;
+use App\Models\TimeSettings;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -19,6 +20,7 @@ class TimeLogs extends Model
         'lunch_break_start',
         'lunch_brek_ends',
         'time_out',
+        'undertime',
         'overtime',
         'late'
     ];
@@ -30,7 +32,7 @@ class TimeLogs extends Model
 
     public function employee()
     {
-        return $this->belongsTo('App\Models\Employees', 'employee_gen_id', 'employee_id');
+        return $this->belongsTo('App\Models\Employees', 'employee_id', 'employee_gen_id')->with('person');
     }
 
     public static function store($params)
@@ -38,17 +40,43 @@ class TimeLogs extends Model
         date_default_timezone_set("Asia/Manila");
         DB::beginTransaction();
         try {
-            self::create([
-                'employee_id' => $params['employee_id'],
-                'activity_date' => now(),
-                'time_in' => date("H:i"),
-            ]);
+            $timesettings = TimeSettings::first();
+            if (!empty($timesettings)) {
+                $timeDB = $timesettings->workstarts;
+                $timeEntry = date("H:i");
+                $workstarts = (int)str_replace(':', '', $timeDB);
+                $starts = (int)str_replace(':', '', $timeEntry);
+                $late = self::convertTime(round(abs(strtotime($timeEntry) - strtotime($timeDB)) / 3600,2));
+
+                if ($starts > $workstarts) {
+                    self::create([
+                        'employee_id' => $params['employee_id'],
+                        'activity_date' => now(),
+                        'time_in' => $timeEntry,
+                        'late' => $late,
+                    ]);
+                    DB::commit();
+                    return 'Undertime';
+                } else {
+                    self::create([
+                        'employee_id' => $params['employee_id'],
+                        'activity_date' => now(),
+                        'time_in' => $timeEntry,
+                    ]);
+                }
+            } else {
+                self::create([
+                    'employee_id' => $params['employee_id'],
+                    'activity_date' => now(),
+                    'time_in' => date("H:i"),
+                ]);
+            }
             DB::commit();
-            return true;
+            return 'Time In';
         } catch (\Exception $e) {
             \Log::error(get_class().' store: '.$e);
             DB::rollback();
-            return false;
+            return null;
         }
     }
 
@@ -68,5 +96,32 @@ class TimeLogs extends Model
             DB::rollback();
             return false;
         }
+    }
+
+    public static function filter($params)
+    {
+        return self::with('employee')->get();
+    }
+
+    public static function convertTime($dec)
+    {
+        // start by converting to seconds
+        $seconds = ($dec * 3600);
+        // we're given hours, so let's get those the easy way
+        $hours = floor($dec);
+        // since we've "calculated" hours, let's remove them from the seconds variable
+        $seconds -= $hours * 3600;
+        // calculate minutes left
+        $minutes = floor($seconds / 60);
+        // remove those from seconds as well
+        $seconds -= $minutes * 60;
+        // return the time formatted HH:MM:SS
+        return self::lz($hours).":".self::lz($minutes);
+    }
+
+    // lz = leading zero
+    public static function lz($num)
+    {
+        return (strlen($num) < 2) ? "0{$num}" : $num;
     }
 }

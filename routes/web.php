@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => ['auth', 'can:admin.view']], function () {
     Route::resource('employee', EmployeeController::class);
     Route::resource('report', ReportsController::class);
+    Route::post('/report', [ReportsController::class, 'index']);
     Route::resource('timesetting', TimeSettingsController::class);
 });
 

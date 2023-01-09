@@ -14,7 +14,8 @@ class TimeSettingsController extends Controller
      */
     public function index()
     {
-        //
+        $timesetting = TimeSettings::first();
+        return view('pages.worksettings.index', compact('timesetting'));
     }
 
     /**
@@ -35,7 +36,26 @@ class TimeSettingsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'workstarts' => 'required',
+            'workends' => 'required'
+        ]);
+
+        $params = $request->all();
+
+        \DB::beginTransaction();
+        try {
+            TimeSettings::create([
+                'workstarts' => $params['workstarts'],
+                'workends' => $params['workends']
+            ]);
+            \DB::commit();
+            return redirect()->back()->with('success', ['Time In!', 'success']);
+        } catch (\Exception $e) {
+            \Log::error(get_class().' store: '.$e);
+            \DB::rollback();
+            return redirect()->back()->with('error', ['Something went wrong', 'danger']);
+        }
     }
 
     /**

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('lunch_break_start')->nullable();
             $table->string('lunch_brek_ends')->nullable();
             $table->string('time_out')->nullable();
+            $table->string('undertime')->nullable();
             $table->string('overtime')->nullable();
             $table->string('late')->nullable();
             $table->timestamps();

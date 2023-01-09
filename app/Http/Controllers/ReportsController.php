@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TimeLogs;
 use Illuminate\Http\Request;
 
 class ReportsController extends Controller
@@ -11,9 +12,11 @@ class ReportsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $params = $request->all();
+        $timelogs = TimeLogs::filter($params);
+        return view('pages.reports.index', compact('timelogs'));
     }
 
     /**

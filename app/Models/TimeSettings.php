@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class TimeSettings extends Model
 {
     use HasFactory;
+
+    protected $table = 'timesettings';
+
+    protected $fillable = [
+        'workstarts',
+        'workends',
+        'lunchbreak',
+    ];
 }

@@ -43,6 +43,8 @@
                                 $('#exampleModal').modal('show');
                             } else if (!response.exists) {
                                 alert('Employee ID number not found');
+                            } else if (!response.withRecord) {
+                                alert('You have no time in yet');
                             }
                         }
                     });

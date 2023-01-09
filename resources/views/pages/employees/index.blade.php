@@ -13,7 +13,7 @@
                 <div class="card-header">{{ __('Employees') }}</div>
 
                 <div class="card-body">
-                    <table class="table table-stripped">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>ID Number</th>
@@ -41,7 +41,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5"><span class="text-center">No Record Found</span></td>
+                                    <td colspan="5"><p class="text-center m-0">No Record Found</p></td>
                                 </tr>
                             @endforelse
                         </tbody>
