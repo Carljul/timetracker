@@ -19,7 +19,9 @@
                     @endphp
                     <form method="POST" action="{{ $route }}">
                         @csrf
-
+                        @if(!empty($timesetting)) 
+                        @method('PUT')
+                        @endif
                         <div class="row mb-3">
                             <label for="workstarts" class="col-md-4 col-form-label text-md-end">{{ __('Work Starts') }}</label>
 

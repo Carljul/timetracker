@@ -50,7 +50,7 @@ class TimeSettingsController extends Controller
                 'workends' => $params['workends']
             ]);
             \DB::commit();
-            return redirect()->back()->with('success', ['Time In!', 'success']);
+            return redirect()->back()->with('success', ['Saved!', 'success']);
         } catch (\Exception $e) {
             \Log::error(get_class().' store: '.$e);
             \DB::rollback();
@@ -89,7 +89,26 @@ class TimeSettingsController extends Controller
      */
     public function update(Request $request, TimeSettings $timeSettings)
     {
-        //
+        $request->validate([
+            'workstarts' => 'required',
+            'workends' => 'required'
+        ]);
+
+        $params = $request->all();
+
+        \DB::beginTransaction();
+        try {
+            $timeSettings->update([
+                'workstarts' => $params['workstarts'],
+                'workends' => $params['workends']
+            ]);
+            \DB::commit();
+            return redirect()->back()->with('success', ['Updated!', 'success']);
+        } catch (\Exception $e) {
+            \Log::error(get_class().' store: '.$e);
+            \DB::rollback();
+            return redirect()->back()->with('error', ['Something went wrong', 'danger']);
+        }
     }
 
     /**
