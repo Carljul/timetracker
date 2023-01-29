@@ -123,8 +123,14 @@ class TimeLogsController extends Controller
      * @param  \App\Models\TimeLogs  $timeLogs
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TimeLogs $timeLogs)
+    public function destroy(TimeLogs $timelog)
     {
-        //
+        $rtn = TimeLogs::deleter($timelog);
+
+        if ($rtn) {
+            return redirect()->back()->with('success', ['Deleted!', 'success']);
+        }
+
+        return redirect()->back()->with('error', ['Something went wrong', 'danger']);
     }
 }

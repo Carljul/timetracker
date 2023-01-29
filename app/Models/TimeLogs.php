@@ -156,4 +156,18 @@ class TimeLogs extends Model
     {
         return (strlen($num) < 2) ? "0{$num}" : $num;
     }
+
+    public static function deleter($timelog)
+    {
+        DB::beginTransaction();
+        try {
+            $timelog->delete();
+            DB::commit();
+            return true;
+        } catch(\Exception $e) {
+            \Log::error(get_class().' deleter'.$e);
+            DB::rollback();
+            return false;
+        }
+    }
 }

@@ -64,6 +64,7 @@
                                         <th>Undertime</th>
                                         <th>Overtime</th>
                                         <th>Late</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -77,10 +78,43 @@
                                             <td>{{$timelog->undertime}}</td>
                                             <td>{{$timelog->overtime}}</td>
                                             <td>{{$timelog->late}}</td>
+                                            <td>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        $('#deleteBtn{{$timelog->id}}').on('click', function () {
+                                                            $('#deleteModal{{$timelog->id}}').modal('show');
+                                                        });
+                                                    })
+                                                </script>
+                                                <button type="button" class="btn btn-danger" id="deleteBtn{{$timelog->id}}">
+                                                    Delete
+                                                </button>
+                                                <div class="modal fade" id="deleteModal{{$timelog->id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{$timelog->id}}" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="deleteModalLabel">Confirmation</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Are you sure you want to delete timelog for <br>{{$timelog->activity_date}} <br> {{$timelog->time_in}} - {{$timelog->time_out}}?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <form action="{{route('timelog.destroy', $timelog->id)}}" method="post">
+                                                                @method('DELETE')
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-primary">Confirm</button>
+                                                            </form>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="7">
+                                            <td colspan="8">
                                                 <p class="text-center m-0">No record found</p>
                                             </td>
                                         </tr>

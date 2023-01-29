@@ -52,6 +52,10 @@
                     });
                 }
             });
+
+            $('#activityForm').on('submit', function () {
+                $('#activityForm button').attr('disabled', true);
+            });
         });
     </script>
 @endpush
