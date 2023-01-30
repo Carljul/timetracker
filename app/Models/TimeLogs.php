@@ -85,7 +85,7 @@ class TimeLogs extends Model
         date_default_timezone_set("Asia/Manila");
         DB::beginTransaction();
         try {
-            $timelog = self::where('employee_id', $timelog)->first();
+            $timelog = self::where('employee_id', $timelog)->whereDate('activity_date', now())->first();
             $timesettings = TimeSettings::first();
 
             if (!empty($timesettings)) {
