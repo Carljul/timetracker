@@ -10,6 +10,26 @@
                     $('#employeeGroup input').prop('checked', false);
                 }
             });
+
+            function tConvert (time) {
+                // Check correct time format and split into components
+                time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+                if (time.length > 1) { // If time format correct
+                    time = time.slice (1);  // Remove full string match value
+                    time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+                    time[0] = +time[0] % 12 || 12; // Adjust hours
+                }
+                return time.join (''); // return adjusted time or original string
+            }
+
+            $('.time_in').each(function (element) {
+                $(this).html(tConvert($(this).text()));
+            });
+
+            $('.time_out').each(function (element) {
+                $(this).html(tConvert($(this).text()));
+            });
         })
     </script>
 @endpush
@@ -73,8 +93,8 @@
                                             <td>{{$timelog->activity_date}}</td>
                                             <td>{{$timelog->employee->employee_gen_id}}</td>
                                             <td>{{$timelog->employee->person->fullname}}</td>
-                                            <td>{{$timelog->time_in}}</td>
-                                            <td>{{$timelog->time_out}}</td>
+                                            <td class="time_in">{{$timelog->time_in}}</td>
+                                            <td class="time_out">{{$timelog->time_out}}</td>
                                             <td>{{$timelog->undertime}}</td>
                                             <td>{{$timelog->overtime}}</td>
                                             <td>{{$timelog->late}}</td>
@@ -84,8 +104,47 @@
                                                         $('#deleteBtn{{$timelog->id}}').on('click', function () {
                                                             $('#deleteModal{{$timelog->id}}').modal('show');
                                                         });
+                                                        $('#editBtn{{$timelog->id}}').on('click', function () {
+                                                            $('#editModal{{$timelog->id}}').modal('show');
+                                                        });
                                                     })
                                                 </script>
+                                                <button type="button" class="btn btn-outline-primary" id="editBtn{{$timelog->id}}">
+                                                    Edit
+                                                </button>
+                                                <div class="modal fade" id="editModal{{$timelog->id}}" tabindex="-1" aria-labelledby="editModalLabel{{$timelog->id}}" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <form action="{{route('timelog.manual')}}" method="post">
+                                                            @csrf
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="editModalLabel{{$timelog->id}}">Edit Timelog Information</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div>
+                                                                        <p>Record of: {{$timelog->employee->person->fullname}}</p>
+                                                                        <p>Date: {{$timelog->activity_date}}</p>
+                                                                        <input type="hidden" name="employee_id" value="{{$timelog->employee_id}}">
+                                                                        <input type="hidden" name="activity_date" value="{{$timelog->activity_date}}">
+                                                                    </div>
+                                                                    <div>
+                                                                        <label for="time_in" class="col-form-label text-md-end">{{ __('Time IN') }}</label>
+                                                                        <input id="time_in" type="time" class="form-control @error('time_in') is-invalid @enderror" name="time_in" value="{{ old('time_in', $timelog->time_in) }}">
+                                                                    </div>
+                                                                    <div>
+                                                                        <label for="time_out" class="col-form-label text-md-end">{{ __('Time OUT') }}</label>
+                                                                        <input id="time_out" type="time" class="form-control @error('time_out') is-invalid @enderror" name="time_out" value="{{ old('time_out', $timelog->time_out) }}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                                 <button type="button" class="btn btn-danger" id="deleteBtn{{$timelog->id}}">
                                                     Delete
                                                 </button>
@@ -93,7 +152,7 @@
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="deleteModalLabel">Confirmation</h5>
+                                                            <h5 class="modal-title" id="deleteModalLabel{{$timelog->id}}">Confirmation</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">

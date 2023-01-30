@@ -133,4 +133,26 @@ class TimeLogsController extends Controller
 
         return redirect()->back()->with('error', ['Something went wrong', 'danger']);
     }
+
+    /**
+     * Updates Time log manunally by admin only
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function manual(Request $request)
+    {
+        $request->validate([
+            'employee_id' => 'required',
+            'activity_date' => 'required'
+        ]);
+
+        $rtn = TimeLogs::manualler($request->all());
+
+        if ($rtn) {
+            return redirect()->back()->with('success', ['Updated', 'success']);
+        }
+
+        return redirect()->back()->with('error', ['Something went wrong', 'danger']);
+    }
 }

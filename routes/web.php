@@ -52,4 +52,5 @@ Route::group(['prefix' => 'timelog', 'as' => 'timelog.'], function () {
     Route::match(['PUT', 'PATCH'], '/{timelog}', [TimeLogsController::class, 'update'])->name('update');
     Route::delete('/{timelog}', [TimeLogsController::class, 'destroy'])->name('destroy');
     Route::get('/{timelog}/edit', [TimeLogsController::class, 'edit'])->name('edit');
+    Route::post('/manual', [TimeLogsController::class, 'manual'])->name('manual');
 });

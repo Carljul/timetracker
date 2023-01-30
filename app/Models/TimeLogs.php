@@ -97,12 +97,12 @@ class TimeLogs extends Model
                 
                 if ($out > $workends) {
                     $timelog->update([
-                        'time_out' => date("H:i"),
+                        'time_out' => $timeEntry,
                         'overtime' => $undertimeOrOvertime,
                     ]);
                 } else if ($out < $workends) {
                     $timelog->update([
-                        'time_out' => date("H:i"),
+                        'time_out' => $timeEntry,
                         'undertime' => $undertimeOrOvertime,
                     ]);
                 }
@@ -166,6 +166,54 @@ class TimeLogs extends Model
             return true;
         } catch(\Exception $e) {
             \Log::error(get_class().' deleter'.$e);
+            DB::rollback();
+            return false;
+        }
+    }
+
+    public static function manualler($request)
+    {
+        date_default_timezone_set("Asia/Manila");
+        DB::beginTransaction();
+        try {
+            $timelog = self::where('employee_id', $request['employee_id'])->whereDate('activity_date', $request['activity_date'])->first();
+            $timesettings = TimeSettings::first();
+
+            if (!empty($timesettings)) {
+                $timeDB = $timesettings->workends;
+                $timeEntry = $request['time_out'];
+                $workends = (int)str_replace(':', '', $timeDB);
+                $out = (int)str_replace(':', '', $timeEntry);
+                $undertimeOrOvertime = self::convertTime(round(abs(strtotime($timeEntry) - strtotime($timeDB)) / 3600,2));
+                
+                
+                if ($out > $workends) {
+                    $timelog->update([
+                        'time_in' => $request['time_in'],
+                        'time_out' => $request['time_out'],
+                        'overtime' => $undertimeOrOvertime,
+                    ]);
+                } else if ($out < $workends) {
+                    $timelog->update([
+                        'time_in' => $request['time_in'],
+                        'time_out' => $request['time_out'],
+                        'undertime' => $undertimeOrOvertime,
+                    ]);
+                }
+
+                DB::commit();
+                return true;
+            }
+
+
+            $timelog->update([
+                'time_in' => $request['time_in'],
+                'time_out' => $request['time_out']
+            ]);
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            \Log::error(get_class().' store: '.$e);
             DB::rollback();
             return false;
         }
