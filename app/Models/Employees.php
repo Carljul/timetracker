@@ -104,7 +104,7 @@ class Employees extends Model
         DB::beginTransaction();
         try {
             $user = User::where('employee_id', $employee->employee_gen_id)->first();
-            $person = Person::where('id', $employee->person_id)->first();
+            $person = Persons::where('id', $employee->person_id)->first();
             $user->delete();
             $person->delete();
             $employee->delete();
