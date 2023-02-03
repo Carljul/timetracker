@@ -4,6 +4,7 @@ namespace App\Models;
 
 use DB;
 use App\Models\TimeSettings;
+use App\Models\Employees;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

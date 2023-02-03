@@ -44,6 +44,7 @@ class ReportsController extends Controller
             return $item->activity_date;
         });
         $newTimelog = $timelogs->toArray();
+        dd($newTimelog);
         $updatedTimelog = [];
         for($x = 0; $x < count($dates); $x++) {
             $date = $dates[$x];
@@ -54,6 +55,7 @@ class ReportsController extends Controller
                 $updatedTimelog[$date] = collect(null);
             }
         }
+        dd(collect($updatedTimelog));
         $timelogs = collect($updatedTimelog);
 
         $employees = Employees::where('isResigned', 0)->where('person_id', '!=', 1)->with('person')->get();
