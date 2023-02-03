@@ -17,13 +17,15 @@ class ReportsController extends Controller
      */
     public function index(Request $request)
     {
-        if (!empty($request->all())) {
+        $params = $request->all();
+
+        if (!empty($params)) {
             $request->validate([
                 'dateFrom' => 'required',
                 'dateTo' => 'required'
             ]);
         }
-        $params = $request->all();
+
         $timelogs = TimeLogs::filter($params);
         $employees = Employees::where('isResigned', 0)->where('person_id', '!=', 1)->with('person')->get();
         return view('pages.reports.index', compact('timelogs', 'employees'));

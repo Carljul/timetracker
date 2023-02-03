@@ -40,14 +40,13 @@
             <div class="card">
                 <div class="card-header">{{ __('Reports') }}</div>
                 <div class="card-body">
-                    <form action="" method="post" class="mb-3">
-                        @csrf
+                    <form action="{{route('report.index')}}" method="get" class="mb-3">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="row">
                                     <label for="dateFrom" class="col-md-2">{{ __('From') }}</label>
                                     <div class="col-md-4">
-                                        <input type="date" class="form-control @error('dateFrom') is-invalid @enderror" name="dateFrom" value="{{ old('dateFrom') }}">
+                                        <input type="date" class="form-control @error('dateFrom') is-invalid @enderror" name="dateFrom" value="{{ old('dateFrom', isset($_GET['dateFrom']) ? $_GET['dateFrom']:'') }}">
                                         @error('dateFrom')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -56,7 +55,7 @@
                                     </div>
                                     <label for="dateFrom" class="col-md-1">{{ __('To') }}</label>
                                     <div class="col-md-5">
-                                        <input type="date" class="form-control @error('dateTo') is-invalid @enderror" name="dateTo" value="{{ old('dateTo') }}">
+                                        <input type="date" class="form-control @error('dateTo') is-invalid @enderror" name="dateTo" value="{{ old('dateTo', isset($_GET['dateTo']) ? $_GET['dateTo']:'') }}">
                                         @error('dateTo')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -68,6 +67,7 @@
                             <div class="col-sm-4">
                                 <button type="submit" class="btn btn-primary">Filter</button>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Export</button>
+                                <a href="{{route('report.index')}}" class="btn btn-warning">Clear Filter</a>
                             </div>
                         </div>
                     </form>
@@ -173,7 +173,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="8">
+                                            <td colspan="9">
                                                 <p class="text-center m-0">No record found</p>
                                             </td>
                                         </tr>
