@@ -22,8 +22,8 @@ class ReportsController extends Controller
         $dateFrom = Carbon::now()->startOfMonth();
         $dateTo = Carbon::now()->endOfMonth();
         $params = $request->all();
-        // dd($params);
-        if (!empty($request->all())) {
+
+        if (!empty($params)) {
             $request->validate([
                 'dateFrom' => 'required',
                 'dateTo' => 'required'
@@ -38,8 +38,6 @@ class ReportsController extends Controller
         {
             $dates[] = $date->format('Y-m-d');
         }
-
-        // dd($dates, $dateFrom, $dateTo);
 
         $timelogs = TimeLogs::filter($params);
         $timelogs =  $timelogs->groupBy(function ($item) {
