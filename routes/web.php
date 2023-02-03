@@ -31,7 +31,7 @@ Route::group(['middleware' => ['auth', 'can:admin.view']], function () {
     Route::resource('employee', EmployeeController::class);
     Route::group(['middleware' => 'auth', 'prefix' => 'report', 'as' => 'report.'], function () {
         Route::get('/', [ReportsController::class, 'index'])->name('index');
-        Route::post('/', [ReportsController::class, 'index'])->name('filter');
+        Route::post('/', [ReportsController::class, 'index'])->name('index');
         Route::get('/create', [ReportsController::class, 'create'])->name('create');
         Route::post('/', [ReportsController::class, 'store'])->name('store');
         Route::post('/show', [ReportsController::class, 'show'])->name('show');

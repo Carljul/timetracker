@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use App\Models\TimeLogs;
 use App\Models\Employees;
 use Illuminate\Http\Request;
@@ -17,14 +19,45 @@ class ReportsController extends Controller
      */
     public function index(Request $request)
     {
+        $dateFrom = Carbon::now()->startOfMonth();
+        $dateTo = Carbon::now()->endOfMonth();
+        $params = $request->all();
+        // dd($params);
         if (!empty($request->all())) {
             $request->validate([
                 'dateFrom' => 'required',
                 'dateTo' => 'required'
             ]);
+
+            $dateFrom = Carbon::parse($params['dateFrom']);
+            $dateTo = Carbon::parse($params['dateTo']);
         }
-        $params = $request->all();
+
+        $period = CarbonPeriod::create($dateFrom, $dateTo);
+        foreach($period as $date)
+        {
+            $dates[] = $date->format('Y-m-d');
+        }
+
+        // dd($dates, $dateFrom, $dateTo);
+
         $timelogs = TimeLogs::filter($params);
+        $timelogs =  $timelogs->groupBy(function ($item) {
+            return $item->activity_date;
+        });
+        $newTimelog = $timelogs->toArray();
+        $updatedTimelog = [];
+        for($x = 0; $x < count($dates); $x++) {
+            $date = $dates[$x];
+            $result = null;
+            if (isset($newTimelog[$date])) {
+                $updatedTimelog[$date] = collect($newTimelog[$date]);
+            } else {
+                $updatedTimelog[$date] = collect(null);
+            }
+        }
+        $timelogs = collect($updatedTimelog);
+
         $employees = Employees::where('isResigned', 0)->where('person_id', '!=', 1)->with('person')->get();
         return view('pages.reports.index', compact('timelogs', 'employees'));
     }
