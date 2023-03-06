@@ -53,6 +53,8 @@ class TimeLogsController extends Controller
      */
     public function show(Request $request)
     {
+        date_default_timezone_set('Asia/Manila');
+
         $request->validate([
             'employee_id' => 'required'
         ]);
@@ -62,7 +64,7 @@ class TimeLogsController extends Controller
         $rtn = TimeLogs::where('employee_id', $params['employee_id'])
             ->whereDate('activity_date', now())
             ->first();
-        
+
         $employeeExists = Employees::where('employee_gen_id', $params['employee_id'])->exists();
 
         if (!empty($rtn)) {
@@ -71,7 +73,9 @@ class TimeLogsController extends Controller
                 'employee' => $rtn,
                 'employee_id' => $params['employee_id'],
                 'exists' => $employeeExists,
-                'withTimeOut' => !empty($rtn->time_out)
+                'withTimeOut' => !empty($rtn->time_out),
+                'now' => now(),
+                'timezone' => date_default_timezone_get()
             ]);
         }
 
@@ -80,7 +84,9 @@ class TimeLogsController extends Controller
             'employee' => $rtn,
             'employee_id' => $params['employee_id'],
             'exists' => $employeeExists,
-            'withTimeOut' => false
+            'withTimeOut' => false,
+            'now' => now(),
+            'timezone' => date_default_timezone_get()
         ]);
     }
 
@@ -136,7 +142,7 @@ class TimeLogsController extends Controller
 
     /**
      * Updates Time log manunally by admin only
-     * 
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
