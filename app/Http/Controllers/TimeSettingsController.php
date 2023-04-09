@@ -87,7 +87,7 @@ class TimeSettingsController extends Controller
      * @param  \App\Models\TimeSettings  $timeSettings
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TimeSettings $timeSettings)
+    public function update(Request $request, TimeSettings $timesetting)
     {
         $request->validate([
             'workstarts' => 'required',
@@ -98,7 +98,7 @@ class TimeSettingsController extends Controller
 
         \DB::beginTransaction();
         try {
-            $timeSettings->update([
+            $timesetting->update([
                 'workstarts' => $params['workstarts'],
                 'workends' => $params['workends']
             ]);

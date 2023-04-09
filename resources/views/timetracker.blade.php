@@ -11,10 +11,11 @@
                         url: action,
                         data: {'employee_id': $('#idNumber').val()},
                         success: function (response) {
+                            console.log(response)
                             if (!response.withRecord && response.exists) {
                                 $('#activityForm').attr('action', "{{route('timelog.store')}}");
                                 $('#idNumberInput').val(response.employee_id);
-                                $('#activity').html('Time In');
+                                $('#activity').html('Time In: '+response.readable);
                                 $('#exampleModal').modal('show');
                                 $('input[name="_method"]').remove();
                             } else if (!response.exists) {
@@ -41,7 +42,7 @@
                                 $('#activityForm').attr('action', '/timelog/'+response.employee_id);
                                 $('#idNumberInput').val(response.employee_id);
                                 $('#activityForm').append('<input type="hidden" name="_method" value="PUT">');
-                                $('#activity').html('Time Out');
+                                $('#activity').html('Time Out: '+ response.readable);
                                 $('#exampleModal').modal('show');
                             } else if (!response.exists) {
                                 alert('Employee ID number not found');

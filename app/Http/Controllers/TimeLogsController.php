@@ -62,11 +62,11 @@ class TimeLogsController extends Controller
         $params = $request->all();
 
         $rtn = TimeLogs::where('employee_id', $params['employee_id'])
-            ->whereDate('activity_date', now())
+            ->whereDate('activity_date', date('Y-m-d'))
             ->first();
 
         $employeeExists = Employees::where('employee_gen_id', $params['employee_id'])->exists();
-
+        
         if (!empty($rtn)) {
             return response()->json([
                 'withRecord' => true,
@@ -74,7 +74,8 @@ class TimeLogsController extends Controller
                 'employee_id' => $params['employee_id'],
                 'exists' => $employeeExists,
                 'withTimeOut' => !empty($rtn->time_out),
-                'now' => now(),
+                'time' => date('Y-m-d H:i:s'),
+                'readable' => date('M d, Y H:i A'),
                 'timezone' => date_default_timezone_get()
             ]);
         }
@@ -86,6 +87,8 @@ class TimeLogsController extends Controller
             'exists' => $employeeExists,
             'withTimeOut' => false,
             'now' => now(),
+            'time' => date('Y-m-d H:i:s'),
+            'readable' => date('M d, Y H:i A'),
             'timezone' => date_default_timezone_get()
         ]);
     }
@@ -113,7 +116,7 @@ class TimeLogsController extends Controller
         $request->validate([
             'employee_id' => 'required'
         ]);
-
+        
         $rtn = TimeLogs::updater($request->all(), $timeLog);
 
         if ($rtn) {

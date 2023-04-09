@@ -51,7 +51,7 @@ class TimeLogs extends Model
                 if ($starts > $workstarts) {
                     self::create([
                         'employee_id' => $params['employee_id'],
-                        'activity_date' => now(),
+                        'activity_date' => date('Y-m-d'),
                         'time_in' => $timeEntry,
                         'late' => $late,
                     ]);
@@ -60,14 +60,14 @@ class TimeLogs extends Model
                 } else {
                     self::create([
                         'employee_id' => $params['employee_id'],
-                        'activity_date' => now(),
+                        'activity_date' => date('Y-m-d'),
                         'time_in' => $timeEntry,
                     ]);
                 }
             } else {
                 self::create([
                     'employee_id' => $params['employee_id'],
-                    'activity_date' => now(),
+                    'activity_date' => date('Y-m-d'),
                     'time_in' => date("H:i"),
                 ]);
             }
@@ -85,7 +85,7 @@ class TimeLogs extends Model
         date_default_timezone_set("Asia/Manila");
         DB::beginTransaction();
         try {
-            $timelog = self::where('employee_id', $timelog)->whereDate('activity_date', now())->first();
+            $timelog = self::where('employee_id', $timelog)->whereDate('activity_date', date('Y-m-d'))->first();
             $timesettings = TimeSettings::first();
 
             if (!empty($timesettings)) {
@@ -126,13 +126,16 @@ class TimeLogs extends Model
 
     public static function filter($params)
     {
-        if (!empty($params)) {
+        if (!empty($params) && (isset($params['dateFrom']) && date($params['dateTo']))) {
             return self::whereBetween('activity_date', [date($params['dateFrom']), date($params['dateTo'])])
                 ->with('employee')
-                ->get();
+                ->orderBy('id', 'DESC')
+                ->paginate(10);
         }
 
-        return self::with('employee')->get();
+        return self::with('employee')
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
     }
 
     public static function convertTime($dec)

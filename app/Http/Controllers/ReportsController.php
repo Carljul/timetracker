@@ -20,10 +20,10 @@ class ReportsController extends Controller
         $params = $request->all();
 
         if (!empty($params)) {
-            $request->validate([
-                'dateFrom' => 'required',
-                'dateTo' => 'required'
-            ]);
+            // $request->validate([
+            //     'dateFrom' => 'required',
+            //     'dateTo' => 'required'
+            // ]);
         }
 
         $timelogs = TimeLogs::filter($params);

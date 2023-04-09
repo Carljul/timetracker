@@ -180,6 +180,7 @@
                                     @endforelse
                                 </tbody>
                             </table>
+                            {{ $timelogs->links() }}
                         </div>
                     </div>
                 </div>
