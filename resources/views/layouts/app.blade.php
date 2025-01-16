@@ -61,6 +61,23 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('timesetting.index') }}">{{ __('Work Settings') }}</a>
                                 </li>
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        Payroll
+                                    </a>
+    
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{route('payroll.rate.index')}}">
+                                            Rate per person
+                                        </a>
+                                        <a class="dropdown-item" href="{{route('payroll.settings.index')}}">
+                                            Settings
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            Generate
+                                        </a>
+                                    </div>
+                                </li>
                             @endcan
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -87,7 +104,6 @@
         @endguest
 
         <main class="py-4">
-            @yield('content')
             {{-- alert --}}
             @php
                 $message = session()->get('success') ?? session()->get('error');
@@ -95,13 +111,14 @@
             @endphp
     
             @if($message)
-                <div class="notif">
+                <div class="notif position-fixed" style="right: 0;">
                     <div class="alert alert-{{ $message[1] }} alert-dismissible fade show" role="alert">
                         <strong>{{ $message[0] }}</strong>
                         <button type="button" style="display:none" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
             @endif
+            @yield('content')
         </main>
 
     </div>

@@ -63,6 +63,23 @@
             <input type="date" class="form-control" name="employeed" value="{{ old('employeed', $employeed) }}">
         </div>
     </div>
+
+    @if(!$isEdit)
+    <div class="row mb-3">
+        <label for="jobTitle" class="col-md-4 col-form-label text-md-end">{{ __('Job title') }}</label>
+
+        <div class="col-md-6">
+            <input type="text" class="form-control" name="jobTitle" value="">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="rate" class="col-md-4 col-form-label text-md-end">{{ __('Employee Salary Rate') }} <small>(Per day)</small></label>
+
+        <div class="col-md-6">
+            <input type="number" class="form-control" name="rate" value="">
+        </div>
+    </div>
+    @endif
     @if($isEdit)
     <div class="row mb-3">
         <label for="resigned" class="col-md-4 col-form-label text-md-end">{{ __('Date Resigned') }}</label>

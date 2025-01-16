@@ -38,7 +38,9 @@ class EmployeeController extends Controller
     {
         $request->validate([
             'firstname' => 'required',
-            'lastname' => 'required'
+            'lastname' => 'required',
+            'jobTitle' => 'required',
+            'rate' => 'required'
         ]);
 
         $rtn = Employees::store($request->all());

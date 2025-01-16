@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployeeRateController;
+use App\Http\Controllers\PayrollSettingsController;
 use App\Http\Controllers\TimeLogsController;
 use App\Http\Controllers\TimeSettingsController;
 use App\Http\Controllers\Employee\EmployeeController as StaffController;
@@ -39,6 +41,13 @@ Route::group(['middleware' => ['auth', 'can:admin.view']], function () {
         Route::get('/{report}/edit', [ReportsController::class, 'edit'])->name('edit');
     });
     Route::resource('timesetting', TimeSettingsController::class);
+
+    Route::group(['as' => 'payroll.'], function () {
+        Route::resource('rate', EmployeeRateController::class)->except(['create', 'store', 'show', 'destroy']);
+        Route::group(['prefix' => 'payroll'], function () {
+            Route::resource('settings', PayrollSettingsController::class);
+        });
+    });
 });
 
 Route::group(['prefix' => 'timelog', 'as' => 'timelog.'], function () {

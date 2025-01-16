@@ -5,6 +5,7 @@ namespace App\Models;
 use DB;
 use App\Models\User;
 use App\Models\Persons;
+use App\Models\EmployeeRates;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -52,11 +53,18 @@ class Employees extends Model
                 'suffix' => $params['suffix'],
                 'birthdate' => $params['birthdate']
             ]);
+            $employee_gen_id = date('y').str_pad(self::count(), 4, '0', STR_PAD_LEFT);
             
             $employee = self::create([
-                'employee_gen_id' => date('y').str_pad(self::count(), 4, '0', STR_PAD_LEFT),
+                'employee_gen_id' => $employee_gen_id,
                 'person_id' => $person->id,
                 'date_employed' => $params['employeed'],
+            ]);
+
+            $employeeRate = EmployeeRates::create([
+                'employee_id' => $employee_gen_id,
+                'employee_title' => $params['jobTitle'],
+                'rate' => $params['rate'],
             ]);
             User::create([
                 'employee_id' => $employee->employee_gen_id,
