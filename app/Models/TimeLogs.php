@@ -94,7 +94,7 @@ class TimeLogs extends Model
                 $workends = (int)str_replace(':', '', $timeDB);
                 $out = (int)str_replace(':', '', $timeEntry);
                 $undertimeOrOvertime = self::convertTime(round(abs(strtotime($timeEntry) - strtotime($timeDB)) / 3600,2));
-                
+
                 if ($out > $workends) {
                     $timelog->update([
                         'time_out' => $timeEntry,
@@ -188,8 +188,8 @@ class TimeLogs extends Model
                 $workends = (int)str_replace(':', '', $timeDB);
                 $out = (int)str_replace(':', '', $timeEntry);
                 $undertimeOrOvertime = self::convertTime(round(abs(strtotime($timeEntry) - strtotime($timeDB)) / 3600,2));
-                
-                
+
+
                 if ($out > $workends) {
                     $timelog->update([
                         'time_in' => $request['time_in'],
@@ -220,5 +220,18 @@ class TimeLogs extends Model
             DB::rollback();
             return false;
         }
+    }
+
+    public static function whereDate($from, $to)
+    {
+        return self::with(['employee' => function ($employees) {
+            $employees->with('person');
+        }])
+            ->where('activity_date', '>=', $from)
+            ->where('activity_date', '<=', $to)
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->employee->person->fullname ?? 'Unknown';
+            });
     }
 }

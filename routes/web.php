@@ -8,6 +8,8 @@ use App\Http\Controllers\EmployeeRateController;
 use App\Http\Controllers\PayrollSettingsController;
 use App\Http\Controllers\TimeLogsController;
 use App\Http\Controllers\TimeSettingsController;
+use App\Http\Controllers\WorkingDaysController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\Employee\EmployeeController as StaffController;
 
 /*
@@ -41,12 +43,14 @@ Route::group(['middleware' => ['auth', 'can:admin.view']], function () {
         Route::get('/{report}/edit', [ReportsController::class, 'edit'])->name('edit');
     });
     Route::resource('timesetting', TimeSettingsController::class);
+    Route::resource('workdays', WorkingDaysController::class)->except(['index', 'destroy']);
 
     Route::group(['as' => 'payroll.'], function () {
         Route::resource('rate', EmployeeRateController::class)->except(['create', 'store', 'show', 'destroy']);
         Route::group(['prefix' => 'payroll'], function () {
             Route::resource('settings', PayrollSettingsController::class);
         });
+        Route::resource('payroll', PayrollController::class);
     });
 });
 

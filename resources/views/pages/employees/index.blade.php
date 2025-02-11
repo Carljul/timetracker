@@ -37,6 +37,7 @@
                                             @method('DELETE')
                                             <button class="btn btn-danger" type="submit">Delete</button>
                                         </form>
+                                        <a href="{{route('payroll.rate.edit', $employee->rate->id)}}" class="btn btn-info mx-2">Show rate</a>
                                     </td>
                                 </tr>
                             @empty

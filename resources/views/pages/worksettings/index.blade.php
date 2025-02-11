@@ -19,7 +19,7 @@
                     @endphp
                     <form method="POST" action="{{ $route }}">
                         @csrf
-                        @if(!empty($timesetting)) 
+                        @if(!empty($timesetting))
                         @method('PUT')
                         @endif
                         <div class="row mb-3">
@@ -58,6 +58,54 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">{{ __('Work Days') }}</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-10"></div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary form-control">
+                                {{ __('Add new year') }}
+                            </button>
+                        </div>
+                    </div>
+                    <br>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Days</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($workDays as $workDayYearIndex => $workDayYear)
+                                <tr>
+                                    <th colspan="3" class="text-center">{{$workDayYearIndex}}</th>
+                                </tr>
+                                @foreach ($workDayYear as $workDay)
+                                    <tr>
+                                        <td>{{$workDay->month_name}}</td>
+                                        <td>{{$workDay->days}}</td>
+                                        <td class="d-flex">
+                                            <a href="{{route('workdays.edit', $workDay->id)}}" class="btn btn-warning mx-2">Edit</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="3"><p class="text-center m-0">No Record Found</p></td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

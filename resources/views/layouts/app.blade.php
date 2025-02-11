@@ -12,9 +12,13 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    
+
     <script src="{{asset('js/jquery-3.6.3.min.js')}}"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 <body>
     <div id="app">
@@ -65,7 +69,7 @@
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                         Payroll
                                     </a>
-    
+
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{route('payroll.rate.index')}}">
                                             Rate per person
@@ -73,7 +77,7 @@
                                         <a class="dropdown-item" href="{{route('payroll.settings.index')}}">
                                             Settings
                                         </a>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{route('payroll.payroll.index')}}">
                                             Generate
                                         </a>
                                     </div>
@@ -109,7 +113,7 @@
                 $message = session()->get('success') ?? session()->get('error');
                 session()->forget(['success', 'error']);
             @endphp
-    
+
             @if($message)
                 <div class="notif position-fixed" style="right: 0;">
                     <div class="alert alert-{{ $message[1] }} alert-dismissible fade show" role="alert">
@@ -134,6 +138,7 @@
         setTimeout(() => {
             $('.alert-dismissible > .btn-close').trigger('click')
         }, 3000);
+        $('input[name="dates"]').daterangepicker();
     </script>
     @stack('js')
 </body>

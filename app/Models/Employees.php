@@ -35,11 +35,16 @@ class Employees extends Model
         return $this->belongsTo('App\Models\User', 'employee_gen_id', 'employee_id');
     }
 
+    public function rate()
+    {
+        return $this->belongsTo('App\Models\EmployeeRates', 'employee_gen_id', 'employee_id');
+    }
+
     public static function list()
     {
         return self::whereHas('user', function ($query) {
             $query->where('role', '!=', 1);
-        })->with('person')->paginate(10);
+        })->with(['person', 'rate'])->paginate(10);
     }
 
     public static function store($params)
@@ -54,7 +59,7 @@ class Employees extends Model
                 'birthdate' => $params['birthdate']
             ]);
             $employee_gen_id = date('y').str_pad(self::count(), 4, '0', STR_PAD_LEFT);
-            
+
             $employee = self::create([
                 'employee_gen_id' => $employee_gen_id,
                 'person_id' => $person->id,

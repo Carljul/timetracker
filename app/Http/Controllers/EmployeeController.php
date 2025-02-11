@@ -106,7 +106,7 @@ class EmployeeController extends Controller
     public function destroy(Employees $employee)
     {
         $rtn = Employees::destroy($employee);
-        
+
         if ($rtn) {
             return redirect()->route('employee.index')->with(['msg' => 'Deleted']);
         }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TimeSettings;
+use App\Models\WorkingDays;
 use Illuminate\Http\Request;
 
 class TimeSettingsController extends Controller
@@ -15,7 +16,8 @@ class TimeSettingsController extends Controller
     public function index()
     {
         $timesetting = TimeSettings::first();
-        return view('pages.worksettings.index', compact('timesetting'));
+        $workDays = WorkingDays::list();
+        return view('pages.worksettings.index', compact('timesetting', 'workDays'));
     }
 
     /**
