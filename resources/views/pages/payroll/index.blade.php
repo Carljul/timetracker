@@ -3,8 +3,8 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-7"><h3>Payroll</h3></div>
-        <div class="col-md-3">
+        <div class="col-md-8"><h3>Payroll</h3></div>
+        <div class="col-md-4">
             <form action="" method="GET">
                 <div class="input-group mb-3">
                   <input type="text" name="dates" class="form-control" aria-describedby="date-picker">
@@ -18,7 +18,7 @@
             <div class="col-md-3">
                 @include('pages.payroll.components.employee-list', $timelogs)
             </div>
-            <div class="col-md-7">
+            <div class="col-md-9">
                 <div class="row">
                     <div class="col-sm-6">
                         <h5>Pay & Timesheets</h5>
