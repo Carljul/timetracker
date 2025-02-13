@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('employee_id');
             $table->string('employee_title')->nullable();
             $table->double('rate', 12, 2)->default(0);
+            $table->double('ot_rate', 12, 2)->default(0);
             $table->timestamps();
             $table->softDeletes();
 

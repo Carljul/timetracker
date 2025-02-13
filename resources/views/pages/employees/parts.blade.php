@@ -79,6 +79,13 @@
             <input type="number" class="form-control" name="rate" value="">
         </div>
     </div>
+    <div class="row mb-3">
+        <label for="rate" class="col-md-4 col-form-label text-md-end">{{ __('Employee OT Rate') }} <small>(Per hour)</small></label>
+
+        <div class="col-md-6">
+            <input type="number" class="form-control" name="ot_rate" value="">
+        </div>
+    </div>
     @endif
     @if($isEdit)
     <div class="row mb-3">

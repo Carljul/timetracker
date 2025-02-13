@@ -70,6 +70,7 @@ class Employees extends Model
                 'employee_id' => $employee_gen_id,
                 'employee_title' => $params['jobTitle'],
                 'rate' => $params['rate'],
+                'ot_rate' => $params['ot_rate'],
             ]);
             User::create([
                 'employee_id' => $employee->employee_gen_id,

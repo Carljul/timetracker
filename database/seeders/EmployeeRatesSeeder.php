@@ -23,7 +23,8 @@ class EmployeeRatesSeeder extends Seeder
             array_push($toCreateRates, [
                 'employee_id' => $employee->employee_gen_id,
                 'employee_title' => 'Technical Support',
-                'rate' => 610,
+                'rate' => 501,
+                'ot_rate' => 78,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

@@ -17,6 +17,7 @@ class EmployeeRates extends Model
         'employee_id',
         'employee_title',
         'rate',
+        'ot_rate',
     ];
 
     public function employee()
@@ -49,6 +50,7 @@ class EmployeeRates extends Model
             $rate->update([
                 'employee_title' => $params['jobTitle'],
                 'rate' => $params['rate'],
+                'ot_rate' => $params['ot_rate']
             ]);
             DB::commit();
             return true;

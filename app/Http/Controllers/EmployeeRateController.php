@@ -41,13 +41,14 @@ class EmployeeRateController extends Controller
     {
         $request->validate([
             'jobTitle' => 'required',
-            'rate' => 'required'
+            'rate' => 'required',
+            'ot_rate' => 'required'
         ]);
 
         $rtn = EmployeeRates::updater($request->all(), $rate);
 
         if ($rtn) {
-            return redirect()->route('rate.index')->with('success', ['Updated', 'success']);
+            return redirect()->route('employee.index')->with('success', ['Updated', 'success']);
         }
 
         return redirect()->back()->with('error', ['Something went wrong', 'danger']);

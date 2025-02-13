@@ -40,7 +40,8 @@ class EmployeeController extends Controller
             'firstname' => 'required',
             'lastname' => 'required',
             'jobTitle' => 'required',
-            'rate' => 'required'
+            'rate' => 'required',
+            'ot_rate' => 'required'
         ]);
 
         $rtn = Employees::store($request->all());

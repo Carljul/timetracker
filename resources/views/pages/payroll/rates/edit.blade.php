@@ -38,6 +38,13 @@
                                 <input type="number" class="form-control" name="rate" step=".01" value="{{ number_format(old('rate', $rate->rate), 2) }}">
                             </div>
                         </div>
+                        <div class="row mb-3">
+                            <label for="rate" class="col-md-4 col-form-label text-md-end">{{ __('Employee OT Rate') }}</label>
+
+                            <div class="col-md-6">
+                                <input type="number" class="form-control" name="ot_rate" step=".01" value="{{ number_format(old('ot_rate', $rate->ot_rate), 2) }}">
+                            </div>
+                        </div>
 
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
